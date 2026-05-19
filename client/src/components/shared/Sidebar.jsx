@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const navItems = [
   { to: '/dashboard', label: 'Links' },
+  { to: '/profile', label: 'Profile' },
 ];
 
 export const Sidebar = () => {

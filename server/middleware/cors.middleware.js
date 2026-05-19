@@ -4,6 +4,6 @@ export const corsMiddleware = () =>
   cors({
     origin: process.env.CLIENT_URL || true,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
   });

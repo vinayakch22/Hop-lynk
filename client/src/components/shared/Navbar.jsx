@@ -4,14 +4,12 @@ import { toast } from 'react-hot-toast';
 import { useAuthStore } from '../../store/authStore';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '../ui/Button';
-import { EditProfileModal } from '../auth/EditProfileModal';
 
 export const Navbar = () => {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -83,15 +81,6 @@ export const Navbar = () => {
                     <p className="text-xs text-(--text-muted) truncate">{user?.email}</p>
                   </div>
                   <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      setIsProfileModalOpen(true);
-                    }}
-                    className="w-full text-left block px-4 py-2 text-sm text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg) border-b border-(--border) transition-colors"
-                  >
-                    Edit Profile
-                  </button>
-                  <button
                     id="nav-logout-btn"
                     onClick={handleLogout}
                     disabled={isLoggingOut}
@@ -105,11 +94,6 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
-      
-      <EditProfileModal 
-        isOpen={isProfileModalOpen} 
-        onClose={() => setIsProfileModalOpen(false)} 
-      />
     </nav>
   );
 };
