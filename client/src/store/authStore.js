@@ -28,6 +28,12 @@ export const useAuthStore = create((set) => ({
     return data;
   },
 
+  updateProfile: async (userData) => {
+    const { data } = await api.put('/api/auth/profile', userData);
+    set({ user: data.data });
+    return data;
+  },
+
   logout: async () => {
     await api.post('/api/auth/logout');
     set({ user: null, isAuthenticated: false });
