@@ -19,8 +19,12 @@ if (process.env.NODE_ENV !== 'test') {
     });
 
     redisClient.on('connect', () => {
-      isRedisReady = true;
       console.log('⚡ Redis connected successfully');
+    });
+
+    redisClient.on('ready', () => {
+      isRedisReady = true;
+      console.log('✅ Redis ready — caching enabled');
     });
 
     redisClient.on('error', (err) => {
