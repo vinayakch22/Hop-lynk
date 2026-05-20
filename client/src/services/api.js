@@ -14,7 +14,11 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isProfileOrPasswordUpdate =
+      error.config?.url?.endsWith('/api/auth/profile') ||
+      error.config?.url?.endsWith('/api/auth/password');
+
+    if (error.response?.status === 401 && !isProfileOrPasswordUpdate) {
       // Clear auth state and redirect to login
       useAuthStore.getState().clearAuth();
       if (window.location.pathname !== '/login') {

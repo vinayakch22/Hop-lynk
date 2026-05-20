@@ -26,14 +26,13 @@ const StatPill = ({ label, value, isLoading }) => (
 
 export const DashboardPage = () => {
   const { user } = useAuthStore();
-  const { urls, setUrls, pagination, isLoading, fetchUrls, createUrl, updateUrl, deleteUrl, toggleUrl } = useUrls();
+  const { urls, setUrls, pagination, stats, isLoading, fetchUrls, createUrl, updateUrl, deleteUrl, toggleUrl } = useUrls();
 
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreate, setShowCreate] = useState(false);
   const [editUrl, setEditUrl] = useState(null);
   const [qrUrl, setQrUrl] = useState(null);
-  const [stats, setStats] = useState({ total: 0, active: 0, totalClicks: 0 });
 
   const loadUrls = useCallback((page = currentPage, q = search) => {
     fetchUrls({ page, limit: 10, search: q });
@@ -42,15 +41,6 @@ export const DashboardPage = () => {
   useEffect(() => {
     loadUrls(1, '');
   }, []);
-
-  // Compute stats from all URLs (rough from current page)
-  useEffect(() => {
-    setStats({
-      total: pagination.total,
-      active: urls.filter((u) => u.isActive).length,
-      totalClicks: urls.reduce((s, u) => s + (u.totalClicks || 0), 0),
-    });
-  }, [urls, pagination]);
 
   const handleSearch = (e) => {
     const q = e.target.value;
@@ -98,9 +88,9 @@ export const DashboardPage = () => {
 
       {/* Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <StatPill label="Total URLs" value={pagination.total} isLoading={isLoading} />
-        <StatPill label="Active links" value={urls.filter((u) => u.isActive).length} isLoading={isLoading} />
-        <StatPill label="Total clicks" value={urls.reduce((s, u) => s + (u.totalClicks || 0), 0)} isLoading={isLoading} />
+        <StatPill label="Total URLs" value={stats.total} isLoading={isLoading} />
+        <StatPill label="Active links" value={stats.activeCount} isLoading={isLoading} />
+        <StatPill label="Total clicks" value={stats.totalClicks} isLoading={isLoading} />
       </div>
 
       {/* Main Card */}

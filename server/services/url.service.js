@@ -60,10 +60,24 @@ export const getUrlsService = async (userId, { page = 1, limit = 10, search = ''
     ];
   }
 
-  const [urls, total] = await Promise.all([
+  const [urls, total, activeCount, totalClicksResult] = await Promise.all([
     Url.find(query).sort({ createdAt: -1 }).skip(skip).limit(limitNum).lean(),
     Url.countDocuments(query),
+    Url.countDocuments({
+      userId,
+      isActive: true,
+      $or: [
+        { expiresAt: null },
+        { expiresAt: { $gt: new Date() } },
+      ],
+    }),
+    Url.aggregate([
+      { $match: { userId } },
+      { $group: { _id: null, totalClicks: { $sum: '$totalClicks' } } },
+    ]),
   ]);
+
+  const totalClicks = totalClicksResult[0]?.totalClicks || 0;
 
   return {
     urls,
@@ -72,6 +86,11 @@ export const getUrlsService = async (userId, { page = 1, limit = 10, search = ''
       page: pageNum,
       limit: limitNum,
       pages: Math.ceil(total / limitNum),
+    },
+    stats: {
+      total,
+      activeCount,
+      totalClicks,
     },
   };
 };

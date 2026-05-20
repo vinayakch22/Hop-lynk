@@ -5,6 +5,7 @@ import api from '../services/api';
 export const useUrls = () => {
   const [urls, setUrls] = useState([]);
   const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 10, pages: 1 });
+  const [stats, setStats] = useState({ total: 0, activeCount: 0, totalClicks: 0 });
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -14,6 +15,9 @@ export const useUrls = () => {
       const { data } = await api.get('/api/urls', { params: { page: 1, limit: 10, ...params } });
       setUrls(data.urls);
       setPagination(data.pagination);
+      if (data.stats) {
+        setStats(data.stats);
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to fetch URLs');
     } finally {
@@ -43,6 +47,7 @@ export const useUrls = () => {
   return {
     urls, setUrls,
     pagination,
+    stats,
     isLoading,
     search, setSearch,
     fetchUrls,

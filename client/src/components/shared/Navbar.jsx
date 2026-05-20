@@ -92,6 +92,14 @@ export const Navbar = () => {
                     <p className="text-sm font-medium text-(--text-primary) truncate">{user?.name}</p>
                     <p className="text-xs text-(--text-muted) truncate">{user?.email}</p>
                   </div>
+                  <Link
+                    to="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="block w-full text-left px-4 py-2 text-sm text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg) transition-colors border-b border-(--border)"
+                    id="nav-profile-btn"
+                  >
+                    Profile settings
+                  </Link>
                   <button
                     id="nav-logout-btn"
                     onClick={handleLogout}
