@@ -1,4 +1,4 @@
-import { signupService, loginService, logoutService } from '../services/auth.service.js';
+import { signupService, loginService, logoutService, updateProfileService, updatePasswordService } from '../services/auth.service.js';
 
 export const signup = async (req, res, next) => {
   try {
@@ -37,4 +37,24 @@ export const logout = (req, res, next) => {
 
 export const getMe = (req, res) => {
   res.status(200).json({ success: true, data: req.user });
+};
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    const { name, email, currentPassword } = req.body;
+    const updatedUser = await updateProfileService(req.user._id, { name, email, currentPassword });
+    res.status(200).json({ success: true, message: 'Profile updated successfully', data: updatedUser });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updatePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    await updatePasswordService(req.user._id, { currentPassword, newPassword });
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (err) {
+    next(err);
+  }
 };

@@ -33,6 +33,17 @@ export const useAuthStore = create((set) => ({
     set({ user: null, isAuthenticated: false });
   },
 
+  updateProfile: async (profileData) => {
+    const { data } = await api.put('/api/auth/profile', profileData);
+    set({ user: data.data });
+    return data;
+  },
+
+  updatePassword: async (passwordData) => {
+    const { data } = await api.put('/api/auth/password', passwordData);
+    return data;
+  },
+
   clearAuth: () => {
     set({ user: null, isAuthenticated: false, isLoading: false });
   },

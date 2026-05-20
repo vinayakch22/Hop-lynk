@@ -64,7 +64,7 @@ app.get('/r/:shortCode', async (req, res, next) => {
 });
 
 // ─── API Routes ───────────────────────────────────────────────
-app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/urls', urlRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/public', publicRoutes);
