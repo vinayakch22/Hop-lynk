@@ -88,7 +88,87 @@ export const UrlTable = ({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) =
 
   return (
     <div className="overflow-visible">
-      <div className="overflow-x-auto">
+      {/* ── Mobile Card Layout (visible below md) ──────── */}
+      <div className="block md:hidden space-y-3">
+        {urls.map((url) => (
+          <div
+            key={url._id}
+            className="bg-(--bg) border border-(--border) rounded-xl p-4 space-y-3"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="font-mono text-(--color-brand-600) font-medium text-sm truncate">
+                  /r/{url.shortCode}
+                </span>
+                <button
+                  onClick={() => handleCopy(url.shortCode)}
+                  title="Copy short URL"
+                  className="text-(--text-muted) hover:text-(--text-secondary) transition-colors shrink-0"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </button>
+              </div>
+              {getStatusBadge(url)}
+            </div>
+
+            <a
+              href={url.originalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-(--text-secondary) hover:text-(--text-primary) transition-colors block truncate"
+              title={url.originalUrl}
+            >
+              {truncate(url.originalUrl, 40)}
+            </a>
+
+            <div className="flex items-center gap-4 text-xs text-(--text-muted)">
+              <span>
+                <span className="font-semibold text-(--text-primary)">{formatNumber(url.totalClicks)}</span> clicks
+              </span>
+              <span>Created {formatRelativeDate(url.createdAt)}</span>
+              {url.expiresAt && <span>Exp: {formatDate(url.expiresAt)}</span>}
+            </div>
+            {url.lastVisitedAt && (
+              <p className="text-xs text-(--text-muted)">Last visit: {formatRelativeDate(url.lastVisitedAt)}</p>
+            )}
+
+            <div className="flex items-center gap-2 pt-1 border-t border-(--border)">
+              <Button variant="ghost" size="sm" onClick={() => navigate(`/analytics/${url._id}`)} className="flex-1">
+                Analytics
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => onEdit(url)} className="flex-1">
+                Edit
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => onQR(url)} className="flex-1">
+                QR
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleToggle(url)}
+                disabled={togglingId === url._id}
+                className={`flex-1 ${url.isActive ? '!text-amber-600' : '!text-emerald-600'}`}
+              >
+                {togglingId === url._id ? '...' : url.isActive ? 'Disable' : 'Enable'}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleDelete(url)}
+                disabled={deletingId === url._id}
+                className="flex-1 !text-red-500"
+              >
+                {deletingId === url._id ? '...' : 'Delete'}
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Desktop Table (original, untouched) ────────── */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-(--border)">
