@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.model.js';
 
-export const protect = async (req, res, next) => {
+export const protect = (req, res, next) => {
   try {
     const token = req.cookies?.token;
     if (!token) {
@@ -9,13 +8,13 @@ export const protect = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select('-password');
 
-    if (!user) {
-      return res.status(401).json({ success: false, message: 'User belonging to this token no longer exists.' });
-    }
+    req.user = {
+      _id: decoded.id,
+      name: decoded.name,
+      email: decoded.email,
+    };
 
-    req.user = user;
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {

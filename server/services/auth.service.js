@@ -7,7 +7,7 @@ export const signupService = async ({ name, email, password }, res) => {
   if (existingUser) throw new AppError('Email already in use', 409);
 
   const user = await User.create({ name, email, password });
-  generateToken(user._id, res);
+  generateToken(user, res);
 
   return {
     _id: user._id,
@@ -23,7 +23,7 @@ export const loginService = async ({ email, password }, res) => {
     throw new AppError('Invalid email or password', 401);
   }
 
-  generateToken(user._id, res);
+  generateToken(user, res);
 
   return {
     _id: user._id,
