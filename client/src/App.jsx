@@ -1,17 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
 import { useAuthStore } from './store/authStore';
 import { ProtectedRoute } from './components/shared/ProtectedRoute';
-import { LandingPage } from './pages/LandingPage';
-import { LoginPage } from './pages/LoginPage';
-import { SignupPage } from './pages/SignupPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { AnalyticsPage } from './pages/AnalyticsPage';
-import { ProfilePage } from './pages/ProfilePage';
-import { LinkNotFoundPage } from './pages/LinkNotFoundPage';
-import { LinkExpiredPage } from './pages/LinkExpiredPage';
+import { LoadingSpinner } from './components/shared/LoadingSpinner';
+
+// Lazy load page components for code splitting & faster bundle loading
+const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
+const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })));
+const SignupPage = lazy(() => import('./pages/SignupPage').then(m => ({ default: m.SignupPage })));
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage').then(m => ({ default: m.AnalyticsPage })));
+const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
+const LinkNotFoundPage = lazy(() => import('./pages/LinkNotFoundPage').then(m => ({ default: m.LinkNotFoundPage })));
+const LinkExpiredPage = lazy(() => import('./pages/LinkExpiredPage').then(m => ({ default: m.LinkExpiredPage })));
+
+const PageFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-(--bg)">
+    <LoadingSpinner size="lg" />
+  </div>
+);
 
 const AppRoutes = () => {
   const { checkAuth } = useAuthStore();
@@ -60,7 +69,9 @@ function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
-        <AppRoutes />
+        <Suspense fallback={<PageFallback />}>
+          <AppRoutes />
+        </Suspense>
         <Toaster
           position="top-right"
           toastOptions={{

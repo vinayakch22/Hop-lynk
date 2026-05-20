@@ -17,6 +17,7 @@ import { apiNotFound, notFound } from './middleware/notFound.middleware.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { trackAnalytics } from './middleware/track.middleware.js';
 import Url from './models/Url.model.js';
+import { getCache, setCache } from './config/redis.js';
 
 const app = express();
 
@@ -38,7 +39,20 @@ app.get('/health', (req, res) => res.status(200).json({ status: 'OK', timestamp:
 // ─── Public Redirect Route ────────────────────────────────────
 app.get('/r/:shortCode', async (req, res, next) => {
   try {
-    const url = await Url.findOne({ shortCode: req.params.shortCode });
+    const { shortCode } = req.params;
+    const cacheKey = `url:redirect:${shortCode}`;
+
+    // Try to get from cache first
+    let url = await getCache(cacheKey);
+
+    if (!url) {
+      // If not in cache, query DB
+      url = await Url.findOne({ shortCode }).lean();
+      if (url) {
+        // Cache URL metadata for 24 hours (86400 seconds)
+        await setCache(cacheKey, url, 86400);
+      }
+    }
 
     if (!url) return res.redirect(302, buildClientUrl('/link-not-found'));
 

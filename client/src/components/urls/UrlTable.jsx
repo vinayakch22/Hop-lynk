@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -12,7 +12,7 @@ const getStatusBadge = (url) => {
   return <Badge variant="active">● Active</Badge>;
 };
 
-export const UrlTable = ({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) => {
+export const UrlTable = memo(({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) => {
   const navigate = useNavigate();
   const [deletingId, setDeletingId] = useState(null);
   const [togglingId, setTogglingId] = useState(null);
@@ -339,4 +339,4 @@ export const UrlTable = ({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) =
         )}
     </div>
   );
-};
+});
