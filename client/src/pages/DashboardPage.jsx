@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useUrls } from '../hooks/useUrls';
+import { useDebounce } from '../hooks/useDebounce';
 import { DashboardLayout } from '../layouts/DashboardLayout';
 import { UrlTable } from '../components/urls/UrlTable';
 import { CreateUrlModal } from '../components/urls/CreateUrlModal';
@@ -29,34 +30,43 @@ export const DashboardPage = () => {
   const { urls, setUrls, pagination, stats, isLoading, fetchUrls, createUrl, updateUrl, deleteUrl, toggleUrl } = useUrls();
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreate, setShowCreate] = useState(false);
   const [editUrl, setEditUrl] = useState(null);
   const [qrUrl, setQrUrl] = useState(null);
 
-  const loadUrls = useCallback((page = currentPage, q = search) => {
-    fetchUrls({ page, limit: 10, search: q });
-  }, [fetchUrls, currentPage, search]);
-
+  // Monitor query params to auto-open link creation modal (?create=true)
   useEffect(() => {
-    loadUrls(1, '');
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('create') === 'true') {
+      setShowCreate(true);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
-  const handleSearch = (e) => {
-    const q = e.target.value;
-    setSearch(q);
+  const loadUrls = useCallback((page = currentPage, q = debouncedSearch) => {
+    fetchUrls({ page, limit: 10, search: q });
+  }, [fetchUrls, currentPage, debouncedSearch]);
+
+  // Fetch data whenever debounced search query changes
+  useEffect(() => {
     setCurrentPage(1);
-    fetchUrls({ page: 1, limit: 10, search: q });
+    fetchUrls({ page: 1, limit: 10, search: debouncedSearch });
+  }, [debouncedSearch, fetchUrls]);
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    fetchUrls({ page, limit: 10, search });
+    fetchUrls({ page, limit: 10, search: debouncedSearch });
   };
 
   const handleCreated = async (payload) => {
     const newUrl = await createUrl(payload);
-    loadUrls(1, search);
+    loadUrls(1, debouncedSearch);
     return newUrl;
   };
 
@@ -67,7 +77,7 @@ export const DashboardPage = () => {
 
   const handleDeleted = async (id) => {
     await deleteUrl(id);
-    loadUrls(currentPage, search);
+    loadUrls(currentPage, debouncedSearch);
   };
 
   const handleToggled = async (id) => {
@@ -122,6 +132,7 @@ export const DashboardPage = () => {
             <>
               <UrlTable
                 urls={urls}
+                search={debouncedSearch}
                 onEdit={setEditUrl}
                 onDelete={handleDeleted}
                 onToggle={handleToggled}

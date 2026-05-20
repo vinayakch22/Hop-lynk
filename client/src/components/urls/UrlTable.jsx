@@ -12,7 +12,7 @@ const getStatusBadge = (url) => {
   return <Badge variant="active">● Active</Badge>;
 };
 
-export const UrlTable = memo(({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) => {
+export const UrlTable = memo(({ urls, search = '', onEdit, onDelete, onToggle, onQR, onCreate }) => {
   const navigate = useNavigate();
   const [deletingId, setDeletingId] = useState(null);
   const [togglingId, setTogglingId] = useState(null);
@@ -72,9 +72,13 @@ export const UrlTable = memo(({ urls, onEdit, onDelete, onToggle, onQR, onCreate
         <div className="w-12 h-12 rounded-xl bg-(--bg) border border-(--border) flex items-center justify-center mb-4 text-(--text-muted)">
           /r
         </div>
-        <h3 className="text-base font-semibold text-(--text-primary) mb-1">No links yet</h3>
-        <p className="text-sm text-(--text-muted)">Create your first short link to see analytics</p>
-        {onCreate && (
+        <h3 className="text-base font-semibold text-(--text-primary) mb-1">
+          {search ? 'No results found' : 'No links yet'}
+        </h3>
+        <p className="text-sm text-(--text-muted)">
+          {search ? `We couldn't find any matches for "${search}"` : 'Create your first short link to see analytics'}
+        </p>
+        {!search && onCreate && (
           <Button
             onClick={onCreate}
             className="mt-4"

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAuthStore } from '../../store/authStore';
 import { ThemeToggle } from './ThemeToggle';
-import { Button } from '../ui/Button';
+import { CommandPalette } from './CommandPalette';
 
 export const Navbar = () => {
   const { user, logout } = useAuthStore();
@@ -11,6 +11,19 @@ export const Navbar = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [showPalette, setShowPalette] = useState(false);
+
+  // Monitor global key presses for Ctrl+K search shortcut
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setShowPalette((o) => !o);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -53,16 +66,38 @@ export const Navbar = () => {
           </Link>
         </div>
 
-        <button
-          type="button"
-          className="hidden md:flex items-center justify-between gap-3 px-3 py-1.5 w-80 text-sm border border-(--border) rounded-lg bg-(--bg) text-(--text-muted) hover:text-(--text-secondary)"
-          aria-label="Open command bar"
-        >
-          <span>Search or command</span>
-          <kbd className="text-[10px] px-1.5 py-0.5 rounded border border-(--border) bg-(--surface) text-(--text-muted)">Ctrl K</kbd>
-        </button>
+        {user && (
+          <button
+            type="button"
+            onClick={() => setShowPalette(true)}
+            id="nav-search-btn"
+            className="hidden md:flex items-center justify-between gap-3 px-3 py-1.5 w-80 text-sm border border-(--border) rounded-lg bg-(--bg) text-(--text-muted) hover:text-(--text-secondary) transition-all"
+            aria-label="Open command palette"
+          >
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-(--text-muted)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span>Search or command</span>
+            </div>
+            <kbd className="text-[10px] px-1.5 py-0.5 rounded border border-(--border) bg-(--surface) text-(--text-muted) font-sans">Ctrl K</kbd>
+          </button>
+        )}
 
         <div className="flex items-center gap-2">
+          {user && (
+            <button
+              type="button"
+              onClick={() => setShowPalette(true)}
+              className="md:hidden p-2 rounded-lg text-(--text-secondary) hover:bg-(--bg) transition-colors"
+              aria-label="Search"
+              id="nav-mobile-search-btn"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          )}
           <ThemeToggle />
 
           <div className="relative">
@@ -114,16 +149,17 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
+
       {mobileNavOpen && (
         <>
-          <div className="fixed inset-0 top-14 bg-black/45 z-30 lg:hidden" onClick={() => setMobileNavOpen(false)} />
-          <div className="absolute top-14 left-0 right-0 border-b border-(--border) bg-(--surface) z-40 lg:hidden py-3 px-5 space-y-1 shadow-lg animate-fade-in">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden animate-fade-in" onClick={() => setMobileNavOpen(false)} />
+          <div className="fixed top-14 left-0 bottom-0 w-64 bg-(--card) border-r border-(--border) z-40 p-4 space-y-4 lg:hidden animate-slide-in-left overflow-y-auto">
             <Link
               to="/dashboard"
               onClick={() => setMobileNavOpen(false)}
               className="block px-3 py-2 rounded-lg text-sm font-medium text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg) transition-colors"
             >
-              Links
+              Dashboard
             </Link>
             <Link
               to="/profile"
@@ -132,9 +168,20 @@ export const Navbar = () => {
             >
               Profile
             </Link>
+            <div className="pt-4 border-t border-(--border)">
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50"
+              >
+                {isLoggingOut ? 'Logging out…' : 'Log out'}
+              </button>
+            </div>
           </div>
         </>
       )}
+
+      {showPalette && user && <CommandPalette onClose={() => setShowPalette(false)} />}
     </nav>
   );
 };
