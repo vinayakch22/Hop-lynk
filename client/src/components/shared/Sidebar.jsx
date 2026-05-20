@@ -42,8 +42,8 @@ export const Sidebar = () => {
               className={({ isActive }) =>
                 `flex items-center justify-between px-2.5 py-2 text-sm rounded-lg border transition-colors ${
                   isActive
-                    ? 'bg-(--bg) border-(--border) text-(--text-primary)]'
-                    : 'border-transparent text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg)]'
+                    ? 'bg-(--bg) border-(--border) text-(--text-primary)'
+                    : 'border-transparent text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg)'
                 }`
               }
               title={item.label}

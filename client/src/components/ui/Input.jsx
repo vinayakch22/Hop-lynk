@@ -25,9 +25,9 @@ export const Input = forwardRef(
             className={`
               w-full px-3.5 py-2.5 text-sm
               bg-(--surface) border rounded-lg
-              text-(--text-primary) placeholder:text-(--text-muted)]
+              text-(--text-primary) placeholder:text-(--text-muted)
               transition-all duration-200 input-ring
-              ${error ? 'border-red-500/70' : 'border-(--border) focus:border-(--color-brand-500)]'}
+              ${error ? 'border-red-500/70' : 'border-(--border) focus:border-(--color-brand-500)'}
               ${leftIcon ? 'pl-10' : ''}
               ${rightElement ? 'pr-10' : ''}
               ${className}

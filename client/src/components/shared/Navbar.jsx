@@ -10,6 +10,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -28,6 +29,17 @@ export const Navbar = () => {
     <nav className="sticky top-0 z-40 border-b border-(--border) bg-(--surface)">
       <div className="mx-auto px-5 sm:px-8 h-14 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="lg:hidden p-1.5 rounded-lg text-(--text-secondary) hover:bg-(--bg) hover:text-(--text-primary) transition-colors"
+            onClick={() => setMobileNavOpen((o) => !o)}
+            aria-label="Toggle navigation menu"
+            id="nav-hamburger-btn"
+          >
+            <svg className="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileNavOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+            </svg>
+          </button>
           <Link to="/dashboard" className="flex items-center gap-2" id="nav-logo">
             <img src="/logo.png" alt="Hop Lynk Logo" className="w-8 h-8 object-contain rounded" />
             <span className="text-sm font-semibold text-(--text-primary)">Hop Lynk</span>
@@ -94,6 +106,27 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
+      {mobileNavOpen && (
+        <>
+          <div className="fixed inset-0 top-14 bg-black/45 z-30 lg:hidden" onClick={() => setMobileNavOpen(false)} />
+          <div className="absolute top-14 left-0 right-0 border-b border-(--border) bg-(--surface) z-40 lg:hidden py-3 px-5 space-y-1 shadow-lg animate-fade-in">
+            <Link
+              to="/dashboard"
+              onClick={() => setMobileNavOpen(false)}
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg) transition-colors"
+            >
+              Links
+            </Link>
+            <Link
+              to="/profile"
+              onClick={() => setMobileNavOpen(false)}
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg) transition-colors"
+            >
+              Profile
+            </Link>
+          </div>
+        </>
+      )}
     </nav>
   );
 };

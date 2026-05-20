@@ -2,8 +2,8 @@ import { formatNumber } from '../../utils/formatters';
 
 export const StatCard = ({ label, value, icon, color = 'brand', sublabel }) => {
   const colors = {
-    brand: 'text-(--color-brand-600) bg-(--color-brand-500)]/10 border-(--color-brand-500)]/20',
-    accent: 'text-(--color-brand-600) bg-(--color-brand-500)]/10 border-(--color-brand-500)]/20',
+    brand: 'text-(--color-brand-600) bg-(--color-brand-500)/10 border-(--color-brand-500)/20',
+    accent: 'text-(--color-brand-600) bg-(--color-brand-500)/10 border-(--color-brand-500)/20',
     green: 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20',
     amber: 'text-amber-600 bg-amber-500/10 border-amber-500/20',
   };

@@ -37,19 +37,22 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
       style={{ background: 'rgba(2, 6, 23, 0.55)', animation: 'fadeIn 0.2s ease' }}
     >
       <div
         className={`
           relative w-full ${sizeClasses[size]}
-          bg-(--card) border border-(--border)]
+          bg-(--card) border border-(--border)
           rounded-xl shadow-xl
           animate-fade-in-up
+          max-h-[calc(100vh-2rem)]
+          flex flex-col
+          my-auto
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-(--border)">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-(--border) shrink-0">
           <h2 className="text-base font-semibold text-(--text-primary)">{title}</h2>
           <Button
             variant="ghost"
@@ -64,7 +67,7 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
           </Button>
         </div>
         {/* Body */}
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-y-auto flex-1">{children}</div>
       </div>
     </div>,
     document.body

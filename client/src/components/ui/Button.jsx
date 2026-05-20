@@ -6,7 +6,7 @@ const variants = {
   secondary:
     'bg-(--surface) border border-(--border) text-(--text-primary) hover:bg-(--bg) transition-colors',
   ghost:
-    'bg-transparent text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--border)]/60 transition-colors',
+    'bg-transparent text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--border)/60 transition-colors',
   danger:
     'bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 transition-colors',
   outline:

@@ -134,14 +134,14 @@ export const UrlTable = ({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) =
               <p className="text-xs text-(--text-muted)">Last visit: {formatRelativeDate(url.lastVisitedAt)}</p>
             )}
 
-            <div className="flex items-center gap-2 pt-1 border-t border-(--border)">
-              <Button variant="ghost" size="sm" onClick={() => navigate(`/analytics/${url._id}`)} className="flex-1">
+            <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-(--border)">
+              <Button variant="ghost" size="sm" onClick={() => navigate(`/analytics/${url._id}`)} className="flex-1 min-w-[75px] !text-xs !px-2 !py-1">
                 Analytics
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => onEdit(url)} className="flex-1">
+              <Button variant="ghost" size="sm" onClick={() => onEdit(url)} className="flex-1 min-w-[45px] !text-xs !px-2 !py-1">
                 Edit
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => onQR(url)} className="flex-1">
+              <Button variant="ghost" size="sm" onClick={() => onQR(url)} className="flex-1 min-w-[35px] !text-xs !px-2 !py-1">
                 QR
               </Button>
               <Button
@@ -149,7 +149,7 @@ export const UrlTable = ({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) =
                 size="sm"
                 onClick={() => handleToggle(url)}
                 disabled={togglingId === url._id}
-                className={`flex-1 ${url.isActive ? '!text-amber-600' : '!text-emerald-600'}`}
+                className={`flex-1 min-w-[60px] !text-xs !px-2 !py-1 ${url.isActive ? '!text-amber-600' : '!text-emerald-600'}`}
               >
                 {togglingId === url._id ? '...' : url.isActive ? 'Disable' : 'Enable'}
               </Button>
@@ -158,7 +158,7 @@ export const UrlTable = ({ urls, onEdit, onDelete, onToggle, onQR, onCreate }) =
                 size="sm"
                 onClick={() => handleDelete(url)}
                 disabled={deletingId === url._id}
-                className="flex-1 !text-red-500"
+                className="flex-1 min-w-[55px] !text-xs !px-2 !py-1 !text-red-500"
               >
                 {deletingId === url._id ? '...' : 'Delete'}
               </Button>

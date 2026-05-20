@@ -35,10 +35,10 @@ export const UrlPagination = ({ pagination, onPageChange }) => {
         </Button>
 
         {page > 3 && (
-          <>
+          <span className="hidden sm:inline-flex items-center gap-1">
             <Button variant="ghost" size="sm" onClick={() => onPageChange(1)}>1</Button>
             {page > 4 && <span className="text-(--text-muted) px-1">…</span>}
-          </>
+          </span>
         )}
 
         {getPageNumbers().map((num) => (
@@ -47,17 +47,17 @@ export const UrlPagination = ({ pagination, onPageChange }) => {
             variant={num === page ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => onPageChange(num)}
-            className={num === page ? '!px-3' : ''}
+            className={`${num === page ? '!px-3' : ''} ${num !== page ? 'hidden sm:inline-flex' : ''}`}
           >
             {num}
           </Button>
         ))}
 
         {page < pages - 2 && (
-          <>
+          <span className="hidden sm:inline-flex items-center gap-1">
             {page < pages - 3 && <span className="text-(--text-muted) px-1">…</span>}
             <Button variant="ghost" size="sm" onClick={() => onPageChange(pages)}>{pages}</Button>
-          </>
+          </span>
         )}
 
         <Button

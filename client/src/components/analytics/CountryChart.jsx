@@ -43,7 +43,7 @@ export const CountryChart = ({ data }) => {
           <YAxis
             type="category"
             dataKey="name"
-            width={35}
+            width={50}
             tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
             axisLine={false}
             tickLine={false}

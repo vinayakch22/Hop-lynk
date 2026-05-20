@@ -12,7 +12,7 @@ import { Button } from '../components/ui/Button';
 import { formatNumber } from '../utils/formatters';
 
 const StatPill = ({ label, value, isLoading }) => (
-  <div className="bg-(--card) border border-(--border) rounded-xl px-4 py-3 flex-1 min-w-36">
+  <div className="bg-(--card) border border-(--border) rounded-xl px-4 py-3 w-full">
     {isLoading ? (
       <SkeletonStatCard />
     ) : (
@@ -97,7 +97,7 @@ export const DashboardPage = () => {
       </div>
 
       {/* Stats Row */}
-      <div className="flex gap-3 flex-wrap mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         <StatPill label="Total URLs" value={pagination.total} isLoading={isLoading} />
         <StatPill label="Active links" value={urls.filter((u) => u.isActive).length} isLoading={isLoading} />
         <StatPill label="Total clicks" value={urls.reduce((s, u) => s + (u.totalClicks || 0), 0)} isLoading={isLoading} />
@@ -105,7 +105,7 @@ export const DashboardPage = () => {
 
       {/* Main Card */}
       <div className="bg-(--card) border border-(--border) rounded-xl">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 py-4 border-b border-(--border)">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 px-4 py-3 sm:px-5 sm:py-4 border-b border-(--border)">
           <div className="relative flex-1 w-full">
             <input
               id="dashboard-search"
@@ -119,13 +119,13 @@ export const DashboardPage = () => {
           <Button
             onClick={() => setShowCreate(true)}
             id="create-url-btn"
-            className="shrink-0"
+            className="w-full sm:w-auto shrink-0"
           >
             Create link
           </Button>
         </div>
 
-        <div className="p-5">
+        <div className="p-4 sm:p-5">
           {isLoading ? (
             <SkeletonTable rows={5} />
           ) : (

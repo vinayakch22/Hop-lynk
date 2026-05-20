@@ -221,7 +221,7 @@ export const LandingPage = () => {
             {bento.map((item) => (
               <div
                 key={item.title}
-                className={`${item.span} bg-(--card) border border-(--border) rounded-xl p-5 hover:border-(--color-brand-500)]/40 transition-colors`}
+                className={`${item.span} bg-(--card) border border-(--border) rounded-xl p-5 hover:border-(--color-brand-500)/40 transition-colors`}
               >
                 <p className="text-sm font-semibold text-(--text-primary)">{item.title}</p>
                 <p className="text-xs text-(--text-muted) mt-2">{item.description}</p>
